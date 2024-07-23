@@ -76,8 +76,4 @@ A sample project using FastAPI in Python. This project also integrates popular d
 
 ## Contributing
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+Please do not contribute any pull requests to this repository. This repository is for educational purposes only.
