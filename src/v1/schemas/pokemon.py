@@ -3,7 +3,7 @@ from typing import Dict, List
 
 from v1.schemas.common import BoolStr
 
-class PokemonItem(BaseModel):
+class SpeciesItem(BaseModel):
     id: PositiveInt
     image: AnyHttpUrl
     name: str
@@ -19,10 +19,14 @@ class PokemonItem(BaseModel):
     class Config:
         str_to_lower = True
 
-class PokemonList(BaseModel):
-    species: List[PokemonItem]
+class SpeciesList(BaseModel):
+    species: List[SpeciesItem]
 
-class PokemonDetails(BaseModel):
+class PokemonPayload(BaseModel):
+    name: str
+    max_moves: NonNegativeInt
+
+class PokemonItem(BaseModel):
     name: str
     abilities: List[str]
     base_experience: NonNegativeInt

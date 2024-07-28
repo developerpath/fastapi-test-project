@@ -1,15 +1,16 @@
 from fastapi import APIRouter, HTTPException
-from services.http_client import HttpClient
 from typing import Optional
-from pydantic import PositiveInt, NonNegativeInt
+from pydantic import PositiveInt
 
-from v1.schemas.pokemon import PokemonItem, PokemonList, PokemonDetails
+from services.http_client import HttpClient
+from services.utilities import error_to_list
+from v1.schemas.pokemon import SpeciesItem, SpeciesList, PokemonItem, PokemonPayload
 from v1.schemas.common import BoolStr
 
 router = APIRouter()
 
 
-@router.get("/species", response_model=PokemonList)
+@router.get("/species", response_model=SpeciesList)
 async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt] = None):
     url = "https://pokeapi.co/api/v2/pokemon-species"
     offset = index * count if index else 0
@@ -19,7 +20,7 @@ async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt]
     data = await client.get(url, params)
 
     if data.get('error', None):
-        raise HTTPException(status_code=500, detail=f"{url} {data['error']}")
+        raise HTTPException(status_code=500, detail=error_to_list(str(data['error'])))
 
     urls = [itm["url"] for itm in data["results"]]
     aggregated_response = await client.make_requests(urls)
@@ -28,7 +29,7 @@ async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt]
     species_computed = []
     for itm in aggregated_response:
         try:
-            item = PokemonItem(
+            item = SpeciesItem(
                 id = itm["id"],
                 image = f"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{itm['id']:03}.png",
                 name = itm["name"],
@@ -43,14 +44,14 @@ async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt]
             )
             species_computed.append(item)
         except Exception as e:
-            detail = [i.strip() for i in str(e).split('\n')]
-            raise HTTPException(status_code=500, detail=detail)
+            raise HTTPException(status_code=500, detail=error_to_list(str(e)))
 
     return {"species": species_computed}
 
 
-@router.post("/pokemon", response_model=PokemonDetails)
-async def fetch_pokemon_details(name: str, max_moves: NonNegativeInt):
+@router.post("/pokemon", response_model=PokemonItem)
+async def fetch_pokemon_details(payload: PokemonPayload):
+    name = payload.name.lower()
     url = f"https://pokeapi.co/api/v2/pokemon/{name}"
 
     client = HttpClient()
@@ -58,20 +59,19 @@ async def fetch_pokemon_details(name: str, max_moves: NonNegativeInt):
     await client.close()
 
     if data.get('error', None):
-        raise HTTPException(status_code=500, detail=f"{url} {data['error']}")
+        raise HTTPException(status_code=500, detail=error_to_list(str(data['error'])))
 
     try:
-        item = PokemonDetails(
+        item = PokemonItem(
             name = data["name"],
             abilities = [ability["ability"]["name"] for ability in data["abilities"]],
             base_experience = data["base_experience"],
             forms = [form["name"] for form in data["forms"]],
             height = data["height"],
             weight = data["weight"],
-            moves = [move["move"]["name"] for idx, move in enumerate(data["moves"]) if idx < max_moves],
+            moves = [move["move"]["name"] for idx, move in enumerate(data["moves"]) if idx < payload.max_moves],
             sprites = {k: v for k, v in data["sprites"].items() if isinstance(v, str) and v.startswith("http")}
         )
         return item
     except Exception as e:
-        detail = [i.strip() for i in str(e).split('\n')]
-        raise HTTPException(status_code=500, detail=detail)
+        raise HTTPException(status_code=500, detail=error_to_list(str(e)))
