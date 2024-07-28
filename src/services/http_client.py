@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import AnyHttpUrl
 import asyncio
 
+
 class HttpClient:
     def __init__(self):
         self.client = httpx.AsyncClient()
@@ -10,8 +11,11 @@ class HttpClient:
     async def get(self, url: AnyHttpUrl, params: Optional[dict] = None) -> dict:
         try:
             response = await self.client.get(url, params=params)
-            response.raise_for_status()
-            return response.json()
+            return (
+                response.json()
+                if response.status_code == 200
+                else {"status_code": response.status_code, "error": response.text}
+            )
         except Exception as err:
             return {"error": str(err)}
 

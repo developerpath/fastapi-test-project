@@ -1,9 +1,12 @@
-from pydantic import BaseModel, PositiveInt, NonNegativeInt, AnyHttpUrl
+from pydantic import BaseModel, ConfigDict, PositiveInt, NonNegativeInt, AnyHttpUrl
 from typing import Dict, List
 
-from v1.schemas.common import BoolStr
+from src.v1.schemas.common import BoolStr
+
 
 class SpeciesItem(BaseModel):
+    model_config = ConfigDict(str_to_lower=True)
+
     id: PositiveInt
     image: AnyHttpUrl
     name: str
@@ -16,17 +19,19 @@ class SpeciesItem(BaseModel):
     egg_groups: List[str]
     shapes: List[str]
 
-    class Config:
-        str_to_lower = True
 
 class SpeciesList(BaseModel):
     species: List[SpeciesItem]
+
 
 class PokemonPayload(BaseModel):
     name: str
     max_moves: NonNegativeInt
 
+
 class PokemonItem(BaseModel):
+    model_config = ConfigDict(str_to_lower=True)
+
     name: str
     abilities: List[str]
     base_experience: NonNegativeInt
@@ -35,6 +40,3 @@ class PokemonItem(BaseModel):
     weight: NonNegativeInt
     moves: List[str]
     sprites: Dict[str, AnyHttpUrl]
-
-    class Config:
-        str_to_lower = True
