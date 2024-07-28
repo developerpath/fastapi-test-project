@@ -4,7 +4,7 @@ A sample project using FastAPI in Python. This project also integrates popular d
 
 ## Installation
 
-#### Docker
+### Docker:
 
 1. Clone the repository:
 
@@ -25,7 +25,7 @@ A sample project using FastAPI in Python. This project also integrates popular d
     ```
     Or just `docker-compose up` if it has been already built
 
-#### Manual
+### Manual:
 
 1. Clone the repository:
 
