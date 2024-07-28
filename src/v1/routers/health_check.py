@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/healthz", response_model=HealthCheckResponse)
-async def health_check():
+def health_check():
     try:
         content = HealthCheckResponse(message="OK", status=200)
         return content
