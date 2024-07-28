@@ -31,6 +31,22 @@ def test_get_species_invalid_param_count():
     }
 
 
+def test_get_species_non_positive_param_count():
+    response = client.get("/species", params={"count": 0})
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "type": "greater_than",
+                "loc": ["query", "count"],
+                "msg": "Input should be greater than 0",
+                "input": "0",
+                "ctx": {"gt": 0},
+            }
+        ]
+    }
+
+
 def test_get_species_invalid_param_index():
     response = client.get("/species", params={"index": "InvalidType"})
     assert response.status_code == 422
@@ -41,6 +57,22 @@ def test_get_species_invalid_param_index():
                 "loc": ["query", "index"],
                 "msg": "Input should be a valid integer, unable to parse string as an integer",
                 "input": "InvalidType",
+            }
+        ]
+    }
+
+
+def test_get_species_negative_param_index():
+    response = client.get("/species", params={"index": -1})
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "type": "greater_than",
+                "loc": ["query", "index"],
+                "msg": "Input should be greater than 0",
+                "input": "-1",
+                "ctx": {"gt": 0},
             }
         ]
     }
@@ -172,6 +204,16 @@ def test_get_pokemon_name_does_not_exist():
     assert response.status_code == 404
     print(response.json())
     assert response.json() == {"detail": "Not Found"}
+
+
+def test_get_pokemon_data_uppercase_name_success():
+    max_moves = 5
+    response = client.post(
+        "/pokemon", json={"name": "BULBASAUR", "max_moves": max_moves}
+    )
+    response_json = response.json()
+    assert response.status_code == 200
+    assert len(response_json["moves"]) <= max_moves
 
 
 def test_get_pokemon_data_success():
