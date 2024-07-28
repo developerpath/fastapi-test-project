@@ -42,7 +42,20 @@ class PokemonItem(BaseModel):
     shapes: List[str]
 
     class Config:
-        anystr_lower: True
+        str_to_lower = True
 
 class PokemonList(BaseModel):
     species: List[PokemonItem]
+
+class PokemonDetails(BaseModel):
+    name: str
+    abilities: List[str]
+    base_experience: NonNegativeInt
+    forms: List[str]
+    height: NonNegativeInt
+    weight: NonNegativeInt
+    moves: List[str]
+    sprites: Dict[str, AnyHttpUrl]
+
+    class Config:
+        str_to_lower = True
