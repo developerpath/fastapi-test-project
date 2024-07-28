@@ -1,32 +1,7 @@
-from pydantic import (
-    BaseModel,
-    NegativeFloat,
-    NegativeInt,
-    PositiveFloat,
-    PositiveInt,
-    NonNegativeFloat,
-    NonNegativeInt,
-    NonPositiveFloat,
-    NonPositiveInt,
-    conbytes,
-    condecimal,
-    confloat,
-    conint,
-    conlist,
-    conset,
-    constr,
-    Field,
-    AnyHttpUrl
-)
-
-from enum import Enum
-
-from typing import (
-    Deque, Dict, FrozenSet, List, Optional, Sequence, Set, Tuple, Union, Literal
-)
+from pydantic import BaseModel, PositiveInt, NonNegativeInt, AnyHttpUrl
+from typing import Dict, List
 
 from v1.schemas.common import BoolStr
-
 
 class PokemonItem(BaseModel):
     id: PositiveInt
