@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.v1.routers import health_check, pokemon
+from app_v1.routers import health_check, pokemon
 
 app = FastAPI(title="Pokemon REST API")
 

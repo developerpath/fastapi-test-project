@@ -3,9 +3,9 @@ from fastapi.testclient import TestClient
 import pytest
 from unittest.mock import AsyncMock, patch
 
-from src.services.http_client import HttpClient
-from src.v1.app import app
-from src.v1.routers.pokemon import get_pokemon_list
+from services.http_client import HttpClient
+from app_v1.main import app
+from app_v1.routers.pokemon import get_pokemon_list
 
 client = TestClient(app)
 

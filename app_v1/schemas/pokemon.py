@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, PositiveInt, NonNegativeInt, AnyHttpUrl
 from typing import Dict, List
 
-from src.v1.schemas.common import BoolStr
+from app_v1.schemas.common import BoolStr
 
 
 class SpeciesItem(BaseModel):

@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException
 from typing import Optional
 from pydantic import PositiveInt
 
-from src.services.http_client import HttpClient
-from src.v1.schemas.pokemon import SpeciesItem, SpeciesList, PokemonItem, PokemonPayload
-from src.v1.schemas.common import BoolStr
+from services.http_client import HttpClient
+from app_v1.schemas.pokemon import SpeciesItem, SpeciesList, PokemonItem, PokemonPayload
+from app_v1.schemas.common import BoolStr
 
 router = APIRouter()
 

@@ -2,10 +2,10 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from unittest import mock
 
-from src.v1.app import app
+from app_v1.main import app as app_v1
 
 
-client = TestClient(app)
+client = TestClient(app_v1)
 
 
 def test_health_check_post_not_allowed():
@@ -27,7 +27,7 @@ def test_health_check_delete_not_allowed():
 
 
 @mock.patch(
-    "src.v1.routers.health_check.health_check",
+    "app_v1.routers.health_check.health_check",
     return_value=HTTPException(status_code=500),
 )
 def test_health_check_exception_error(health_check):
