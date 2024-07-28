@@ -67,7 +67,7 @@ A sample project using FastAPI in Python. This project also integrates popular d
 
 ## Usage
 
-1. Start the FastAPI dev server:
+1. Start the FastAPI dev server *(ONLY for manual installation)*:
 
     ```shell
     fastapi dev main.py
