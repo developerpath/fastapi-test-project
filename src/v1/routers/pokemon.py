@@ -1,9 +1,7 @@
-from fastapi import APIRouter, HTTPException, Response
-import httpx
-# import asyncio
+from fastapi import APIRouter, HTTPException
 
 from v1.schemas.pokemon import PokemonItem, PokemonList
-from v1.schemas.common import ErrorResponse, BoolStr
+from v1.schemas.common import BoolStr
 from services.http_client import HttpClient
 
 # from enum import Enum
@@ -26988,13 +26986,7 @@ aggregated_response = [
 ]
 
 
-
-responses = {
-    500: {"model": ErrorResponse, "description": "Validation Error"}
-}
-
-
-@router.get("/species", response_model=PokemonList, responses=responses)
+@router.get("/species", response_model=PokemonList)
 async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt] = None):
     base_url = "https://pokeapi.co/api/v2/pokemon-species"
     get_species_url = f"{base_url}?limit={count}&offset={index * count if index else 0}"
@@ -27027,7 +27019,8 @@ async def get_pokemon_list(count: PositiveInt = 20, index: Optional[PositiveInt]
             )
             species_computed.append(item)
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            detail = [i.strip() for i in str(e).split('\n')]
+            raise HTTPException(status_code=500, detail=detail)
 
     return {"species": species_computed}
 
