@@ -5,6 +5,7 @@ from pydantic import PositiveInt
 from services.http_client import HttpClient
 from app_v1.schemas.pokemon import SpeciesItem, SpeciesList, PokemonItem, PokemonPayload
 from app_v1.schemas.common import BoolStr
+from config import settings
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ async def get_pokemon_list(
 ):
     # Define variables
     client = HttpClient()
-    url = "https://pokeapi.co/api/v2/pokemon-species"
+    url = f"{settings.pokeapi_url}/pokemon-species"
     offset = index * count if index else 0
     params = {"limit": count, "offset": offset}
 
@@ -63,7 +64,7 @@ async def get_pokemon_list(
 async def fetch_pokemon_details(payload: PokemonPayload):
     # Define variables
     name = payload.name.lower()
-    url = f"https://pokeapi.co/api/v2/pokemon/{name}"
+    url = f"{settings.pokeapi_url}/pokemon/{name}"
 
     # Get pokemon data
     client = HttpClient()
