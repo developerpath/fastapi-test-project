@@ -13,13 +13,15 @@ router = APIRouter()
 async def get_pokemon_list(
     count: PositiveInt = 20, index: Optional[PositiveInt] = None
 ):
+    # Define variables
+    client = HttpClient()
     url = "https://pokeapi.co/api/v2/pokemon-species"
     offset = index * count if index else 0
     params = {"limit": count, "offset": offset}
 
-    client = HttpClient()
+    # Get list of species
     data = await client.get(url, params)
-
+    # Check if response is valid otherwise raise an exception
     if (
         not data
         or data.get("error", None)
@@ -28,10 +30,12 @@ async def get_pokemon_list(
     ):
         raise HTTPException(status_code=500)
 
+    # For each species item get detailed information
     urls = [itm["url"] for itm in data["results"]]
     aggregated_response = await client.make_requests(urls)
     await client.close()
 
+    # Compute required response of SpeciesItem objects
     species_computed = []
     for itm in aggregated_response:
         try:
@@ -57,19 +61,23 @@ async def get_pokemon_list(
 
 @router.post("/pokemon", response_model=PokemonItem)
 async def fetch_pokemon_details(payload: PokemonPayload):
+    # Define variables
     name = payload.name.lower()
     url = f"https://pokeapi.co/api/v2/pokemon/{name}"
 
+    # Get pokemon data
     client = HttpClient()
     data = await client.get(url)
     await client.close()
 
+    # Check if response is valid otherwise raise an exception
     if not data or data.get("error", None):
         if data and data.get("error", None) and data.get("status_code", None):
             raise HTTPException(status_code=data["status_code"])
         else:
             raise HTTPException(status_code=500)
 
+    # Compute required response of PokemonItem object
     try:
         item = PokemonItem(
             name=data["name"],
