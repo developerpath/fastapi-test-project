@@ -15,7 +15,7 @@ def anyio_backend(request):
     return request.param
 
 
-#SPECIES api tests
+# SPECIES api tests
 def test_get_species_invalid_param_count():
     response = client.get("/species", params={"count": "InvalidType"})
     assert response.status_code == 422
@@ -45,22 +45,23 @@ def test_get_species_invalid_param_index():
         ]
     }
 
+
 def test_get_species_post_not_allowed():
     response = client.post("/species")
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 def test_get_species_put_not_allowed():
     response = client.put("/species")
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 def test_get_species_delete_not_allowed():
     response = client.delete("/species")
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 @pytest.mark.anyio
@@ -84,7 +85,7 @@ def test_get_species_data_success():
     assert len(response_json["species"]) == count
 
 
-#POKEMON api tests
+# POKEMON api tests
 def test_get_pokemon_invalid_param_name():
     response = client.post("/pokemon", json={"name": 1000, "max_moves": 0})
     assert response.status_code == 422
@@ -151,19 +152,19 @@ def test_get_pokemon_missing_param_max_moves():
 def test_get_pokemon_get_not_allowed():
     response = client.get("/pokemon", params={"name": "test", "max_moves": 0})
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 def test_get_pokemon_put_not_allowed():
     response = client.put("/pokemon", json={"name": "test", "max_moves": 0})
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 def test_get_pokemon_delete_not_allowed():
     response = client.delete("/pokemon")
     assert response.status_code == 405
-    assert response.json() == {"detail":"Method Not Allowed"}
+    assert response.json() == {"detail": "Method Not Allowed"}
 
 
 def test_get_pokemon_name_does_not_exist():
